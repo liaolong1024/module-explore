@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile default="true" name="Default" enabled="true" />
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="spring-netty-explore" />
+        <module name="spring-ai-websocket" />
+        <module name="spring-ai-wehsocket" />
+        <module name="spring-ai-explore" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="netty-explore" target="17" />
+      <module name="spring-ai-wehsocket" target="17" />
+    </bytecodeTargetLevel>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="netty-explore" options="-parameters" />
+      <module name="spring-ai-demo" options="" />
+      <module name="spring-ai-explore" options="-parameters" />
+      <module name="spring-ai-websocket" options="-parameters" />
+      <module name="spring-ai-wehsocket" options="-parameters" />
+      <module name="spring-netty-explore" options="-parameters" />
+    </option>
+  </component>
+</project>

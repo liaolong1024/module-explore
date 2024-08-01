@@ -1,6 +1,8 @@
 package com.ai.explore.service;
 
 import com.ai.explore.entity.request.DemoRequest;
+import org.springframework.ai.chat.model.ChatResponse;
+import reactor.core.publisher.Flux;
 
 /**
  * @author ll
@@ -8,4 +10,6 @@ import com.ai.explore.entity.request.DemoRequest;
  */
 public interface DemoService {
     String ai(DemoRequest request);
+
+    Flux<ChatResponse> stream(DemoRequest request);
 }

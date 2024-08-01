@@ -2,11 +2,12 @@ package com.ai.explore.controller;
 
 import com.ai.explore.entity.request.DemoRequest;
 import com.ai.explore.service.DemoService;
+import org.springframework.ai.chat.model.ChatResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Flux;
+
+import javax.validation.Valid;
 
 /**
  * @author ll
@@ -24,8 +25,13 @@ public class DemoController {
      * @param request 请求体
      * @return 响应
      */
-    @PostMapping("/ai")
-    public String ai(@RequestBody DemoRequest request) {
+    @PostMapping("/ai/generate")
+    public String ai(@RequestBody @Valid DemoRequest request) {
         return demoService.ai(request);
+    }
+
+    @PostMapping("/ai/generateStream")
+    public Flux<ChatResponse> generateStream(@RequestBody @Valid DemoRequest request) {
+        return demoService.stream(request);
     }
 }
