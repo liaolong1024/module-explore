@@ -14,12 +14,14 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="docs" target="17" />
       <module name="netty-explore" target="17" />
       <module name="spring-ai-wehsocket" target="17" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="docs" options="-parameters" />
       <module name="netty-explore" options="-parameters" />
       <module name="spring-ai-demo" options="" />
       <module name="spring-ai-explore" options="-parameters" />
