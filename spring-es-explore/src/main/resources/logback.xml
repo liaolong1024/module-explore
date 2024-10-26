@@ -1,12 +1,12 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<configuration debug="false" xmlns="http://ch.qos.logback/xml/ns/logback"
-               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-               xsi:schemaLocation="http://ch.qos.logback/xml/ns/logback
-               https://raw.githubusercontent.com/enricopulatzo/logback-XSD/master/src/main/xsd/logback.xsd">
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration
+        xmlns="http://ch.qos.logback/xml/ns/logback"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://ch.qos.logback/xml/ns/logback https://raw.githubusercontent.com/enricopulatzo/logback-XSD/master/src/main/xsd/logback.xsd">
     <!--定义日志文件的存储地址 -->
-    <Property name="logDir" value="./logs"/>
-    <Property name="histLogDir" value="./logs/hist"/>
-    <Property name="splitSize" value="1MB"/>
+    <property name="logDir" value="./logs"/>
+    <property name="histLogDir" value="./logs/hist"/>
+    <property name="splitSize" value="1MB"/>
 
     <!--appender01 控制台日志， 控制台输出 -->
     <appender name="Console" class="ch.qos.logback.core.ConsoleAppender">
@@ -20,9 +20,9 @@
     <appender name="run-appender" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!--日志文件输出的文件名,不支持%i-->
-            <FileNamePattern>${logDir}/info.%d{yyyy-MM-dd}.ecommerce</FileNamePattern>
+            <fileNamePattern>${logDir}/info.%d{yyyy-MM-dd}.ecommerce</fileNamePattern>
             <!--日志文件保留天数-->
-            <MaxHistory>2</MaxHistory>
+            <maxHistory>2</maxHistory>
             <totalSizeCap>1MB</totalSizeCap>
             <cleanHistoryOnStart>true</cleanHistoryOnStart>
         </rollingPolicy>
