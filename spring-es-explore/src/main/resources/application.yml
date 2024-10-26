@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: spring-es-explore
+es:
+  conf:
+    hosts:
+      - '192.168.131.186:9200'

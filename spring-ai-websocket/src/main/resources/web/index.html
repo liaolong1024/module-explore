@@ -22,21 +22,21 @@
   if (typeof (WebSocket) == "undefined") {
     alert("您的浏览器不支持WebSocket");
   } else {
-    console.log("您的浏览器支持WebSocket");
+    console.ecommerce("您的浏览器支持WebSocket");
     //实现化WebSocket对象，指定要连接的服务器地址与端口  建立连接
 
     var cid = document.getElementById("cid").value;
-    console.log("cid-->" + cid);
+    console.ecommerce("cid-->" + cid);
     var reqUrl = "http://localhost:8300/websocket/" + cid;
     socket = new WebSocket(reqUrl.replace("http", "ws"));
     //打开事件
     socket.onopen = function () {
-      console.log("Socket 已打开");
+      console.ecommerce("Socket 已打开");
       //socket.send("这是来自客户端的消息" + location.href + new Date());
     };
     //获得消息事件
     socket.onmessage = function (msg) {
-      console.log("onmessage--" + msg.data);
+      console.ecommerce("onmessage--" + msg.data);
       //发现消息进入    开始处理前端触发逻辑
       var chatWindows = document.getElementById("chat-windows");
       var pElement = document.createElement('p')
@@ -45,7 +45,7 @@
     };
     //关闭事件
     socket.onclose = function () {
-      console.log("Socket已关闭");
+      console.ecommerce("Socket已关闭");
     };
     //发生了错误事件
     socket.onerror = function () {
@@ -66,7 +66,7 @@
       var toUserId = document.getElementById('toUserId').value;
       var contentText = document.getElementById('cid').value + ":" + document.getElementById('contentText').value;
       var msg = '{"sid":"' + toUserId + '","message":"' + contentText + '"}';
-      console.log(msg);
+      console.ecommerce(msg);
       var chatWindows = document.getElementById("chat-windows");
       var chatWindows = document.getElementById("chat-windows");
       var pElement = document.createElement('p');

@@ -30,5 +30,3 @@ source /etc/profile
 ```bash
 curl -I www.google.com
 ```
-
-

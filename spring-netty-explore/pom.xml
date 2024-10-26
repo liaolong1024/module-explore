@@ -37,7 +37,7 @@
             <artifactId>netty-all</artifactId>
         </dependency>
 
-        <!-- log -->
+        <!-- ecommerce -->
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>

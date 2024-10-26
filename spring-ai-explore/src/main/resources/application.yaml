@@ -1,8 +1,0 @@
-server:
-  port: 9999
-spring:
-  ai:
-    openai:
-      api-key: sk-KMlAV45Ty4W7KXttv7snkJETItalFzl3N48ZfXzyuUMlwHTp
-#      api-key: sk-proj-IVL3FU3NJzKMLywQ5wF2T3BlbkFJU3xMSV2gvUBsSh70Hsrf
-      base-url: https://api.chatanywhere.tech

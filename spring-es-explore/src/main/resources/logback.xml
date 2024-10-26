@@ -33,8 +33,7 @@
     </appender>
 
 
-    <logger name="com.yangchr.sb002.entity" level="INFO" additivity="false">
-        <appender-ref ref="Console"/>
+    <logger name="com.spring.ai.es" level="INFO" additivity="false">
         <appender-ref ref="run-appender"/>
     </logger>
 
