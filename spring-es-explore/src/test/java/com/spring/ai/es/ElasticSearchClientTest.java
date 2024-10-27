@@ -5,6 +5,8 @@ import com.spring.ai.es.entity.TestIndex;
 import org.apache.commons.io.IOUtils;
 import org.elasticsearch.action.admin.indices.alias.IndicesAliasesRequest;
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
+import org.elasticsearch.action.bulk.BulkRequest;
+import org.elasticsearch.action.bulk.BulkResponse;
 import org.elasticsearch.action.delete.DeleteRequest;
 import org.elasticsearch.action.delete.DeleteResponse;
 import org.elasticsearch.action.get.GetRequest;
@@ -21,8 +23,12 @@ import org.elasticsearch.cluster.metadata.AliasMetadata;
 import org.elasticsearch.cluster.metadata.MappingMetadata;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.xcontent.XContentType;
+import org.elasticsearch.index.query.MatchQueryBuilder;
 import org.elasticsearch.index.query.RangeQueryBuilder;
+import org.elasticsearch.index.query.TermQueryBuilder;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
+import org.elasticsearch.search.sort.FieldSortBuilder;
+import org.elasticsearch.search.sort.SortOrder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -150,7 +156,19 @@ public class ElasticSearchClientTest {
         IndexRequest indexRequest = new IndexRequest().index("test_index_20241026113224")
                 .source(json, XContentType.JSON);
         IndexResponse response = client.index(indexRequest, RequestOptions.DEFAULT);
-        LOGGER.info("add document result: [{}]", response.getResult());
+        LOGGER.info("add document result: [{}]", response.getId());
+    }
+
+    @Test
+    void testSyncBulkAddDocument() throws IOException {
+        BulkRequest request = new BulkRequest();
+        for (int i = 0; i < 5; i++) {
+            TestIndex testIndex = TestIndex.builder().avgTicketPrice(BigDecimal.valueOf(i)).build();
+            String json = objectMapper.writeValueAsString(testIndex);
+            request.add(new IndexRequest().index("test_index_20241026113224").source(json, XContentType.JSON));
+        }
+        BulkResponse bulkResponse = client.bulk(request, RequestOptions.DEFAULT);
+        LOGGER.info("sync bulk add doc response: [{}]", bulkResponse.status());
     }
 
     @Test
@@ -171,11 +189,35 @@ public class ElasticSearchClientTest {
 
     @Test
     void testSearchDocument() throws IOException {
+        String index = "test_index_20241026113224";
+
+        // range search
         RangeQueryBuilder avgTicketPrice = new RangeQueryBuilder("AvgTicketPrice").gt(10);
         SearchSourceBuilder sourceBuilder = new SearchSourceBuilder().query(avgTicketPrice);
-        SearchRequest searchRequest = new SearchRequest().indices("test_index_20241026113224")
+        SearchRequest searchRequest = new SearchRequest().indices(index)
                 .source(sourceBuilder);
         SearchResponse response = client.search(searchRequest, RequestOptions.DEFAULT);
-        LOGGER.info("search response is [{}]", response.getHits().getTotalHits().value);
+        LOGGER.info("range search response is [{}]", response.getHits().getTotalHits().value);
+
+        // match query
+        MatchQueryBuilder matchQueryBuilder = new MatchQueryBuilder("OriginCountry", "DE");
+        SearchSourceBuilder mathQuerySourceBuilder = new SearchSourceBuilder().query(matchQueryBuilder);
+        SearchRequest matchQuerySearchRequest = new SearchRequest().indices(index)
+                .source(mathQuerySourceBuilder);
+        SearchResponse matchResponse = client.search(matchQuerySearchRequest, RequestOptions.DEFAULT);
+        LOGGER.info("match search response first doc id is [{}]",
+                matchResponse.getHits().getAt(0).getId());
+
+        // term query & sort
+        TermQueryBuilder termQueryBuilder = new TermQueryBuilder("currency", "EUR");
+        FieldSortBuilder customerBirthDate = new FieldSortBuilder("customer_birth_date")
+                .order(SortOrder.ASC);
+        SearchSourceBuilder sortSourceBuilder = new SearchSourceBuilder().query(termQueryBuilder)
+                .sort(customerBirthDate).sort("customer_first_name.keyword", SortOrder.DESC);
+        LOGGER.info("search request DSL is: {}", sortSourceBuilder);
+        SearchRequest sortRequest = new SearchRequest().indices("kibana_sample_data_ecommerce")
+                .source(sortSourceBuilder);
+        SearchResponse sortResponse = client.search(sortRequest, RequestOptions.DEFAULT);
+        LOGGER.info("sort response is [{}]", sortResponse.getHits().getAt(0));
     }
 }
