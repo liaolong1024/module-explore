@@ -1,5 +1,19 @@
-package com.spring.ai.es.config;/**
- * @author  ll
+package com.spring.ai.es.config;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+/**
+ * 向spring容器注入应用共用的Bean
+ *
+ * @author ll
  * @since 2024-10-27 11:10
- */public class BeanConfig {
+ */
+@Configuration
+public class BeanConfig {
+    @Bean("defaultObjectMapper")
+    public ObjectMapper defaultObjectMapper() {
+        return new ObjectMapper();
+    }
 }
