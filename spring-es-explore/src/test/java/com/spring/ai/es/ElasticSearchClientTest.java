@@ -21,13 +21,17 @@ import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.client.indices.*;
 import org.elasticsearch.cluster.metadata.AliasMetadata;
 import org.elasticsearch.cluster.metadata.MappingMetadata;
+import org.elasticsearch.common.geo.GeoDistance;
 import org.elasticsearch.common.settings.Settings;
+import org.elasticsearch.common.unit.DistanceUnit;
 import org.elasticsearch.common.xcontent.XContentType;
 import org.elasticsearch.index.query.MatchQueryBuilder;
 import org.elasticsearch.index.query.RangeQueryBuilder;
 import org.elasticsearch.index.query.TermQueryBuilder;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.elasticsearch.search.sort.FieldSortBuilder;
+import org.elasticsearch.search.sort.GeoDistanceSortBuilder;
+import org.elasticsearch.search.sort.SortMode;
 import org.elasticsearch.search.sort.SortOrder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -208,7 +212,7 @@ public class ElasticSearchClientTest {
         LOGGER.info("match search response first doc id is [{}]",
                 matchResponse.getHits().getAt(0).getId());
 
-        // term query & sort
+        // term query & field_sort
         TermQueryBuilder termQueryBuilder = new TermQueryBuilder("currency", "EUR");
         FieldSortBuilder customerBirthDate = new FieldSortBuilder("customer_birth_date")
                 .order(SortOrder.ASC);
@@ -219,5 +223,19 @@ public class ElasticSearchClientTest {
                 .source(sortSourceBuilder);
         SearchResponse sortResponse = client.search(sortRequest, RequestOptions.DEFAULT);
         LOGGER.info("sort response is [{}]", sortResponse.getHits().getAt(0));
+
+        // term query & geo sort
+        TermQueryBuilder termQueryForGeo = new TermQueryBuilder("currency", "EUR");
+        GeoDistanceSortBuilder geoDistanceSortBuilder = new GeoDistanceSortBuilder("geoip.location", -70, 40)
+                .geoDistance(GeoDistance.ARC)
+                .sortMode(SortMode.MIN)
+                .order(SortOrder.ASC)
+                .unit(DistanceUnit.KILOMETERS)
+                .ignoreUnmapped(true);
+        SearchSourceBuilder geoSortSourceBuilder = new SearchSourceBuilder().query(termQueryForGeo).sort(geoDistanceSortBuilder);
+        LOGGER.info("geoSortSourceBuilder DSL: {}", geoSortSourceBuilder);
+        SearchRequest geoSearchRequest = new SearchRequest().indices("kibana_sample_data_ecommerce").source(geoSortSourceBuilder);
+        SearchResponse geoSortResponse = client.search(geoSearchRequest, RequestOptions.DEFAULT);
+        LOGGER.info("geo sort query response: {}", geoSortResponse.getHits().getAt(0));
     }
 }
