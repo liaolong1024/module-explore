@@ -1,8 +1,10 @@
 package com.spring.ai.es;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.spring.ai.es.entity.TestIndex;
 import org.apache.commons.io.IOUtils;
+import org.apache.http.util.EntityUtils;
 import org.elasticsearch.action.admin.indices.alias.IndicesAliasesRequest;
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
 import org.elasticsearch.action.bulk.BulkRequest;
@@ -16,7 +18,9 @@ import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.action.support.master.AcknowledgedResponse;
+import org.elasticsearch.client.Request;
 import org.elasticsearch.client.RequestOptions;
+import org.elasticsearch.client.Response;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.client.indices.*;
 import org.elasticsearch.cluster.metadata.AliasMetadata;
@@ -232,10 +236,37 @@ public class ElasticSearchClientTest {
                 .order(SortOrder.ASC)
                 .unit(DistanceUnit.KILOMETERS)
                 .ignoreUnmapped(true);
-        SearchSourceBuilder geoSortSourceBuilder = new SearchSourceBuilder().query(termQueryForGeo).sort(geoDistanceSortBuilder);
+        SearchSourceBuilder geoSortSourceBuilder = new SearchSourceBuilder().query(termQueryForGeo)
+                .sort(geoDistanceSortBuilder);
         LOGGER.info("geoSortSourceBuilder DSL: {}", geoSortSourceBuilder);
         SearchRequest geoSearchRequest = new SearchRequest().indices("kibana_sample_data_ecommerce").source(geoSortSourceBuilder);
         SearchResponse geoSortResponse = client.search(geoSearchRequest, RequestOptions.DEFAULT);
         LOGGER.info("geo sort query response: {}", geoSortResponse.getHits().getAt(0));
+    }
+
+    /**
+     * 分页查找
+     */
+    @Test
+    void testPaginationSearchDocument() throws IOException {
+        SearchSourceBuilder paginationSourceBuilder = new SearchSourceBuilder()
+                .from(5).size(5).query(new MatchQueryBuilder("currency", "EUR"));
+        SearchRequest paginationSearchRequest = new SearchRequest()
+                .indices("kibana_sample_data_ecommerce")
+                .source(paginationSourceBuilder);
+        SearchResponse paginationResponse = client.search(paginationSearchRequest, RequestOptions.DEFAULT);
+        LOGGER.info("pagination response hit size is {}", paginationResponse.getHits().getTotalHits());
+
+        // 使用search_after连续分页查询时，获取PIT以并在后续查询中指定pit.id可保证查询数据一致性
+        Request pitRequest = new Request("POST", "/kibana_sample_data_ecommerce/_pit?keep_alive=1m");
+        Response response = client.getLowLevelClient().performRequest(pitRequest);
+        String pitId = objectMapper.readTree(EntityUtils.toString(response.getEntity())).get("id").asText();
+        LOGGER.info("pit is {}", pitId);
+        // do something...
+        Request deletePitRequest = new Request("DELETE", "/_pit");
+        ObjectNode objectNode = objectMapper.createObjectNode().put("id", pitId);
+        deletePitRequest.setJsonEntity(objectNode.toString());
+        Response deletePitResponse = client.getLowLevelClient().performRequest(deletePitRequest);
+        LOGGER.info("delete pit response is {}", EntityUtils.toString(deletePitResponse.getEntity()));
     }
 }
