@@ -1,6 +1,7 @@
 package com.spring.ai.es.controller;
 
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -10,8 +11,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/es")
 public class EsController {
-//    @RequestMapping(path = "/ecommerce", method = RequestMethod.POST)
-//    public Ecommerce log(Ecommerce ecommerce) {
-//        return ecommerce;
-//    }
+    @RequestMapping(path = "/ecommerce", method = RequestMethod.POST)
+    public String log(String ecommerce) {
+        return ecommerce;
+    }
 }
