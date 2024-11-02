@@ -33,7 +33,7 @@
     </appender>
 
 
-    <logger name="com.spring.ai.es" level="INFO" additivity="false">
+    <logger name="org.self.learn" level="INFO" additivity="false">
         <appender-ref ref="run-appender"/>
     </logger>
 
