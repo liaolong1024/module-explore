@@ -19,7 +19,7 @@
         <module>netty-explore</module>
         <module>websocket-explore</module>
         <module>es-explore</module>
-        <module>spring.explore</module>
+        <module>spring-explore</module>
         <module>redis-explore</module>
     </modules>
 
@@ -33,6 +33,7 @@
         <elasticsearch.version>7.12.0</elasticsearch.version>
         <slfj.version>1.7.2</slfj.version>
         <commons.io.version>1.3.2</commons.io.version>
+        <guava.version>31.1-jre</guava.version>
     </properties>
 
     <dependencyManagement>
@@ -55,11 +56,18 @@
             </dependency>
             <!--ElasticSearch-->
 
-            <!--commons-->
+            <!--commons-io-->
             <dependency>
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-io</artifactId>
                 <version>${commons.io.version}</version>
+            </dependency>
+            <!--commons-io-->
+
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>${guava.version}</version>
             </dependency>
 
             <dependency>

@@ -8,10 +8,10 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
     <groupId>com.example</groupId>
-    <artifactId>spring-spring-explore</artifactId>
+    <artifactId>spring-explore</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>spring.spring.explore</name>
-    <description>spring.spring.explore</description>
+    <name>spring-explore</name>
+    <description>spring-explore</description>
     <url/>
     <licenses>
         <license/>

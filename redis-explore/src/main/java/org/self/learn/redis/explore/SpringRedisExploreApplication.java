@@ -1,4 +1,4 @@
-package org.spring.ai.redis.explore;
+package org.self.learn.redis.explore;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
