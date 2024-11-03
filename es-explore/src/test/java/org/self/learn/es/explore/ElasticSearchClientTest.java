@@ -2,6 +2,9 @@ package org.self.learn.es.explore;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.elasticsearch.index.query.BoolQueryBuilder;
+import org.elasticsearch.search.collapse.CollapseBuilder;
+import org.elasticsearch.search.fetch.subphase.FieldAndFormat;
 import org.self.learn.es.explore.entity.TestIndex;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.util.EntityUtils;
@@ -275,6 +278,7 @@ public class ElasticSearchClientTest {
         String index = "kibana_sample_data_ecommerce";
         SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder()
                 .fetchField("currency")
+                .fetchField(new FieldAndFormat("order_date", YYYYMMDDHHMMSS))
                 .fetchSource(false);
         LOGGER.info("selected field source builder: {}", searchSourceBuilder);
         SearchRequest searchRequest = new SearchRequest().indices(index)
@@ -283,5 +287,53 @@ public class ElasticSearchClientTest {
                 client.search(searchRequest, RequestOptions.DEFAULT);
 
         LOGGER.info("{}", selectedFieldResponse.getHits().getAt(0));
+    }
+
+    @Test
+    void testCollapseSearch() throws IOException {
+        String index = "kibana_sample_data_ecommerce";
+        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder()
+                .query(new MatchQueryBuilder("currency", "EUR"))
+                .collapse(new CollapseBuilder("customer_gender"))
+                .from(0);
+        LOGGER.info("selected field source builder: {}", searchSourceBuilder);
+        SearchRequest searchRequest = new SearchRequest().indices(index)
+                .source(searchSourceBuilder);
+        SearchResponse selectedFieldResponse =
+                client.search(searchRequest, RequestOptions.DEFAULT);
+
+        LOGGER.info("{}", selectedFieldResponse.getHits());
+    }
+
+    @Test
+    void testFilterSearchResult() throws IOException {
+        String index = "kibana_sample_data_ecommerce";
+
+        // just bool query filter
+        BoolQueryBuilder boolQueryBuilder = new BoolQueryBuilder()
+                .filter(new TermQueryBuilder("currency", "EUR"))
+                .filter(new TermQueryBuilder("customer_gender", "MALE"));
+        SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder()
+                .query(boolQueryBuilder);
+        LOGGER.info("selected field source builder: {}", searchSourceBuilder);
+        SearchRequest searchRequest = new SearchRequest().indices(index)
+                .source(searchSourceBuilder);
+        SearchResponse selectedFieldResponse =
+                client.search(searchRequest, RequestOptions.DEFAULT);
+        LOGGER.info("{}", selectedFieldResponse.getHits().getTotalHits());
+
+        // bool query filter & post_filter
+        BoolQueryBuilder boolQueryBuilder2 = new BoolQueryBuilder()
+                .filter(new TermQueryBuilder("currency", "EUR"));
+        SearchSourceBuilder searchSourceBuilder2 = new SearchSourceBuilder()
+                .query(boolQueryBuilder2)
+                .postFilter(new TermQueryBuilder("customer_gender", "MALE"));
+        LOGGER.info("selected field source builder2: {}", searchSourceBuilder2);
+        SearchRequest searchRequest2 = new SearchRequest().indices(index)
+                .source(searchSourceBuilder2);
+        SearchResponse selectedFieldResponse2 =
+                client.search(searchRequest2, RequestOptions.DEFAULT);
+        LOGGER.info("{}", selectedFieldResponse2.getHits().getTotalHits());
+
     }
 }
