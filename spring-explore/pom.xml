@@ -58,9 +58,16 @@
         <!--logback-->
 
         <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+        </dependency>
+
+        <!--lombok-->
+        <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
         </dependency>
+        <!--lombok-->
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
