@@ -7,7 +7,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.redis.connection.DataType;
+import org.springframework.data.redis.core.Cursor;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ScanOptions;
 import org.springframework.data.redis.core.StringRedisTemplate;
 
 import java.util.*;
@@ -29,7 +31,7 @@ public class RedisTemplateTest {
 
     @Test
     void testCommonCommand() {
-        String key = "string::test::01";
+        String key = "string:test:01";
         // set key
         stringRedisTemplate.opsForValue().set(key, "a");
         // get key
@@ -59,7 +61,7 @@ public class RedisTemplateTest {
 
     @Test
     void testStringOperation() {
-        String key = "string::test::02";
+        String key = "string:test:02";
         // set key value
         stringRedisTemplate.opsForValue().set(key, "value");
         // get key
@@ -120,5 +122,45 @@ public class RedisTemplateTest {
         redisTemplate.opsForValue().decrement(key, 1);
 
         System.out.println();
+    }
+
+    @Test
+    void testHashOperation() {
+        String key = "hash:test:01";
+        // hset key field1 value1
+        stringRedisTemplate.opsForHash().put(key, "a", "b");
+        // hget key field1
+        Object a = stringRedisTemplate.opsForHash().get(key, "a");
+        // hdel key field1
+        stringRedisTemplate.opsForHash().delete(key, "a");
+        // hexists key field1
+        stringRedisTemplate.opsForHash().hasKey(key, "a");
+        // hgetall key
+        stringRedisTemplate.opsForHash().entries(key);
+        // hincrby key field1 increment
+        stringRedisTemplate.opsForHash().increment(key, "a", 1);
+        // hkeys key
+        stringRedisTemplate.opsForHash().keys(key);
+        // hvals key
+        stringRedisTemplate.opsForHash().values(key);
+        // hlen key
+        stringRedisTemplate.opsForHash().size(key);
+        // hmget key field1 field2
+        stringRedisTemplate.opsForHash().multiGet(key, Lists.newArrayList("a"));
+        // hmset key field1 value1 field2 value2
+        stringRedisTemplate.opsForHash().putAll(key, new HashMap<String, String>() {
+            {
+                put("a", "a");
+            }
+        });
+        // hsetnx key field value
+        stringRedisTemplate.opsForHash().putIfAbsent(key, "d", "d");
+        // hscan key cursor [MATCH pattern] [COUNT count]
+        try (Cursor<Map.Entry<Object, Object>> entryCursor = stringRedisTemplate.opsForHash().scan(key, ScanOptions.scanOptions().count(1).build())) {
+            while (entryCursor.hasNext()) {
+                Map.Entry<Object, Object> keyValue = entryCursor.next();
+                System.out.println(keyValue.getKey());
+            }
+        }
     }
 }
