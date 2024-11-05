@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.search.collapse.CollapseBuilder;
 import org.elasticsearch.search.fetch.subphase.FieldAndFormat;
+import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
 import org.self.learn.es.explore.entity.TestIndex;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.util.EntityUtils;
@@ -54,6 +55,7 @@ import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -335,5 +337,17 @@ public class ElasticSearchClientTest {
                 client.search(searchRequest2, RequestOptions.DEFAULT);
         LOGGER.info("{}", selectedFieldResponse2.getHits().getTotalHits());
 
+    }
+
+    @Test
+    void testHighlightQuery() throws IOException {
+        String index = "kibana_sample_data_ecommerce";
+        SearchSourceBuilder sourceBuilder = new SearchSourceBuilder()
+                .query(new MatchQueryBuilder("currency", "EUR"))
+                .highlighter(new HighlightBuilder().field("currency").highlighterType("unified"));
+        LOGGER.info("{}", sourceBuilder);
+        SearchRequest searchRequest = new SearchRequest().indices(index).source(sourceBuilder);
+        SearchResponse searchResponse = client.search(searchRequest, RequestOptions.DEFAULT);
+        LOGGER.info("{}", Arrays.toString(searchResponse.getHits().getHits()));
     }
 }
