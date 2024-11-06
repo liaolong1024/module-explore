@@ -7,10 +7,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.redis.connection.DataType;
-import org.springframework.data.redis.core.Cursor;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.ScanOptions;
-import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.connection.RedisListCommands;
+import org.springframework.data.redis.core.*;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -162,5 +160,53 @@ public class RedisTemplateTest {
                 System.out.println(keyValue.getKey());
             }
         }
+    }
+
+    @Test
+    void testListOperation() {
+        String key = "list:test:01";
+        // lpush key 1
+        stringRedisTemplate.opsForList().leftPush(key, "1");
+        stringRedisTemplate.opsForList().leftPush(key, "2");
+
+        // lpush key val1 val2
+        stringRedisTemplate.opsForList().leftPushAll(key, "1", "2");
+
+        // rpop key
+        stringRedisTemplate.opsForList().rightPop(key);
+
+        // blpop key timeout
+        stringRedisTemplate.opsForList().leftPop(key, 10, TimeUnit.SECONDS);
+
+        // brpoplpush source dest timeout
+        stringRedisTemplate.opsForList().rightPopAndLeftPush(key, key, 10, TimeUnit.SECONDS);
+
+        // lindex key index
+        String valueOfIdx0 = stringRedisTemplate.opsForList().index(key, 0);
+
+        // linsert key before|after pivot val
+        redisTemplate.execute((RedisCallback<Object>) connection -> connection.listCommands().lInsert(key.getBytes(), RedisListCommands.Position.AFTER, "2".getBytes(), "3".getBytes()));
+
+        // llen key
+        stringRedisTemplate.opsForList().size(key);
+
+        // lpushx key val
+        stringRedisTemplate.opsForList().leftPushIfPresent(key, "e");
+
+        // lrange key start end
+        stringRedisTemplate.opsForList().range(key, 0, 2);
+
+        // lrem key count val
+        stringRedisTemplate.opsForList().remove(key, 0, 2);
+
+        // lset key index val
+        stringRedisTemplate.opsForList().set(key, 0, "ee");
+
+        // ltrim key start end
+        stringRedisTemplate.opsForList().trim(key, 0, 5);
+
+        //
+
+        System.out.println();
     }
 }
