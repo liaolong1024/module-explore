@@ -205,8 +205,50 @@ public class RedisTemplateTest {
         // ltrim key start end
         stringRedisTemplate.opsForList().trim(key, 0, 5);
 
-        //
-
         System.out.println();
+    }
+
+    @Test
+    void testSetOperation() {
+        String key = "set:test:01";
+        String key2 = "set:test:02";
+        // sadd key member
+        stringRedisTemplate.opsForSet().add(key, "a");
+        stringRedisTemplate.opsForSet().add(key, "b");
+        stringRedisTemplate.opsForSet().add(key2, "b");
+
+        // smembers key
+        stringRedisTemplate.opsForSet().members(key);
+
+        // scard key
+        stringRedisTemplate.opsForSet().size(key);
+
+        // sdiff key1 key2
+        stringRedisTemplate.opsForSet().difference(Lists.newArrayList(key, key2));
+
+        // sdiffstore destKey key1 key2 ..
+        stringRedisTemplate.opsForSet().differenceAndStore(key, key2, "newKey");
+
+        // sismember key val
+        stringRedisTemplate.opsForSet().isMember(key, "a");
+
+        // smove sourcekey destkey
+        stringRedisTemplate.opsForSet().move(key, key2, "d");
+
+        // spop key
+        stringRedisTemplate.opsForSet().pop(key);
+
+        // srandommember key
+        stringRedisTemplate.opsForSet().randomMember(key);
+
+        // srem key val
+        stringRedisTemplate.opsForSet().remove(key, "a");
+
+        // sunion key val
+        stringRedisTemplate.opsForSet().union(key, key2);
+
+        // sscan key cursor
+        stringRedisTemplate.opsForSet().scan(key, ScanOptions.scanOptions().build());
+
     }
 }
