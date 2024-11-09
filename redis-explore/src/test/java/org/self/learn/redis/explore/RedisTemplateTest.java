@@ -251,4 +251,20 @@ public class RedisTemplateTest {
         stringRedisTemplate.opsForSet().scan(key, ScanOptions.scanOptions().build());
 
     }
+
+    @Test
+    void testSortedSetOperation() {
+        String key = "zset:test:01";
+        // zadd key score member
+        stringRedisTemplate.opsForZSet().add(key, "a", 1);
+
+        // scard key
+        stringRedisTemplate.opsForZSet().size(key);
+
+        // zcount key minS maxS
+        stringRedisTemplate.opsForZSet().count(key, 0, 100);
+
+        // zincr key increment member
+        stringRedisTemplate.opsForZSet().incrementScore(key, "a", 10);
+    }
 }
