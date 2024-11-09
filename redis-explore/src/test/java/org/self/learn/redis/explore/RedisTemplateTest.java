@@ -281,4 +281,10 @@ public class RedisTemplateTest {
         // pfmerge dest source1 source2
         stringRedisTemplate.opsForHyperLogLog().union("dest", key);
     }
+
+    @Test
+    void testPubSub() {
+        String key = "pubsub:test:01";
+        redisTemplate.convertAndSend("chat", "hello");
+    }
 }
