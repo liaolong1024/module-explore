@@ -267,4 +267,18 @@ public class RedisTemplateTest {
         // zincr key increment member
         stringRedisTemplate.opsForZSet().incrementScore(key, "a", 10);
     }
+
+    @Test
+    void testHyperLogLog() {
+        String key = "hyperloglog:test:01";
+
+        // pfadd key elem
+        stringRedisTemplate.opsForHyperLogLog().add(key, "a", "b", "a", "c");
+
+        // pfcount key
+        stringRedisTemplate.opsForHyperLogLog().size(key);
+
+        // pfmerge dest source1 source2
+        stringRedisTemplate.opsForHyperLogLog().union("dest", key);
+    }
 }
