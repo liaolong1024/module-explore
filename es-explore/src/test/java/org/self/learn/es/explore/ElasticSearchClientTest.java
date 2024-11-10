@@ -2,7 +2,7 @@ package org.self.learn.es.explore;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import org.elasticsearch.index.query.BoolQueryBuilder;
+import org.elasticsearch.index.query.*;
 import org.elasticsearch.search.collapse.CollapseBuilder;
 import org.elasticsearch.search.fetch.subphase.FieldAndFormat;
 import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
@@ -33,9 +33,6 @@ import org.elasticsearch.common.geo.GeoDistance;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.unit.DistanceUnit;
 import org.elasticsearch.common.xcontent.XContentType;
-import org.elasticsearch.index.query.MatchQueryBuilder;
-import org.elasticsearch.index.query.RangeQueryBuilder;
-import org.elasticsearch.index.query.TermQueryBuilder;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.elasticsearch.search.sort.FieldSortBuilder;
 import org.elasticsearch.search.sort.GeoDistanceSortBuilder;
@@ -311,7 +308,7 @@ public class ElasticSearchClientTest {
     void testFilterSearchResult() throws IOException {
         String index = "kibana_sample_data_ecommerce";
 
-        // just bool query filter
+        // just bool query filter (全filter查询结果无评分)
         BoolQueryBuilder boolQueryBuilder = new BoolQueryBuilder()
                 .filter(new TermQueryBuilder("currency", "EUR"))
                 .filter(new TermQueryBuilder("customer_gender", "MALE"));
@@ -349,5 +346,15 @@ public class ElasticSearchClientTest {
         SearchRequest searchRequest = new SearchRequest().indices(index).source(sourceBuilder);
         SearchResponse searchResponse = client.search(searchRequest, RequestOptions.DEFAULT);
         LOGGER.info("{}", Arrays.toString(searchResponse.getHits().getHits()));
+    }
+
+    @Test
+    void testMathPhraseQuery() throws IOException {
+        String index = "kibana_sample_data_ecommerce";
+        SearchSourceBuilder query = new SearchSourceBuilder()
+                .query(new MatchPhraseQueryBuilder("products.product_name", "Sweatshirt - white"));
+
+        SearchRequest request = new SearchRequest().indices(index).source(query);
+        SearchResponse response = client.search(request, RequestOptions.DEFAULT);
     }
 }
