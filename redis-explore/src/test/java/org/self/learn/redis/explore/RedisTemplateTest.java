@@ -287,4 +287,29 @@ public class RedisTemplateTest {
         String key = "pubsub:test:01";
         redisTemplate.convertAndSend("chat", "hello");
     }
+
+    /**
+     * redis事务无回滚机制
+     * 1. 语法错误时，事务里所有命令都不会执行
+     * 2. 运行时错误，比如对list类型数据做hash类型数据的操作，正确的命令会执行
+     * 3. watch key： 监控key的变化，当key被修改后，multi事务中的修改或删除(因为过期而删除不属于此类)等命令不执行
+     */
+    @Test
+    void testTransaction() {
+        String key = "a";
+        stringRedisTemplate.multi();
+        stringRedisTemplate.opsForValue().get(key);
+        stringRedisTemplate.opsForValue().set(key, "a");
+        stringRedisTemplate.exec();
+
+        // watch
+        stringRedisTemplate.watch(key);
+        stringRedisTemplate.opsForValue().set(key, "b");
+        stringRedisTemplate.multi();
+        stringRedisTemplate.opsForValue().get(key);
+        // 该命令不执行
+        stringRedisTemplate.opsForValue().set(key, "a");
+        stringRedisTemplate.exec();
+        stringRedisTemplate.unwatch();
+    }
 }
