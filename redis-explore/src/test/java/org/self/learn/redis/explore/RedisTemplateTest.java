@@ -9,6 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.redis.connection.DataType;
 import org.springframework.data.redis.connection.RedisListCommands;
 import org.springframework.data.redis.core.*;
+import org.springframework.data.redis.core.script.DefaultRedisScript;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -311,5 +312,15 @@ public class RedisTemplateTest {
         stringRedisTemplate.opsForValue().set(key, "a");
         stringRedisTemplate.exec();
         stringRedisTemplate.unwatch();
+    }
+    
+    @Test
+    void testLuaScript() {
+        String key = "lua:test:01";
+        String script = "if redis.call('GET', KEYS[1]) == ARGV[1] then redis.call('SET', KEYS[1], ARGV[2]) end";
+        DefaultRedisScript<Object> redisScript = new DefaultRedisScript<>();
+        redisScript.setScriptText(script);
+        redisScript.setResultType(Object.class);
+        stringRedisTemplate.execute(redisScript, Lists.newArrayList(key), "default", "newLua");
     }
 }
