@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.redis.connection.DataType;
 import org.springframework.data.redis.connection.RedisListCommands;
+import org.springframework.data.redis.connection.ReturnType;
 import org.springframework.data.redis.core.*;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
 
@@ -313,7 +314,7 @@ public class RedisTemplateTest {
         stringRedisTemplate.exec();
         stringRedisTemplate.unwatch();
     }
-    
+
     @Test
     void testLuaScript() {
         String key = "lua:test:01";
@@ -322,5 +323,13 @@ public class RedisTemplateTest {
         redisScript.setScriptText(script);
         redisScript.setResultType(Object.class);
         stringRedisTemplate.execute(redisScript, Lists.newArrayList(key), "default", "newLua");
+    }
+
+    @Test
+    void testLuaMultiExists() {
+        String luaScript = "local keys = KEYS; local results = {}; for i = 1, #keys do " +
+                "if redis.call('exists', keys[i]) == 1 then results[i] = 1 else results[i] = 0 end end return results";
+        List<Long> res = (List<Long>)redisTemplate.execute((RedisCallback<Object>) connection -> connection.eval(luaScript.getBytes(), ReturnType.MULTI, 2, "lua".getBytes(), "aa".getBytes()));
+        System.out.println(res);
     }
 }
