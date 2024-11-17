@@ -260,7 +260,7 @@ public class RedisTemplateTest {
         // zadd key score member
         stringRedisTemplate.opsForZSet().add(key, "a", 1);
 
-        // scard key
+        // zcard key
         stringRedisTemplate.opsForZSet().size(key);
 
         // zcount key minS maxS
@@ -331,5 +331,11 @@ public class RedisTemplateTest {
                 "if redis.call('exists', keys[i]) == 1 then results[i] = 1 else results[i] = 0 end end return results";
         List<Long> res = (List<Long>)redisTemplate.execute((RedisCallback<Object>) connection -> connection.eval(luaScript.getBytes(), ReturnType.MULTI, 2, "lua".getBytes(), "aa".getBytes()));
         System.out.println(res);
+    }
+
+    @Test
+    void testClusterMultiget() {
+        List<String> strings = stringRedisTemplate.opsForValue().multiGet(Lists.newArrayList("a{task}", "b{task}"));
+        System.out.println();
     }
 }
