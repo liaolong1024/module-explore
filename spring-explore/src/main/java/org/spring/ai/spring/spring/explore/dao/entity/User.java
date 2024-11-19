@@ -1,6 +1,5 @@
 package org.spring.ai.spring.spring.explore.dao.entity;
 
-import org.spring.ai.spring.spring.explore.validator.UniqueUser;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,6 +13,6 @@ import javax.validation.constraints.NotNull;
 @Getter
 public class User {
     @NotNull
-    @UniqueUser(tableName = "t_user_dfjkdjfldsjfklajsdlfk")
+//    @UniqueUser(tableName = "t_user_dfjkdjfldsjfklajsdlfk")
     private String username;
 }

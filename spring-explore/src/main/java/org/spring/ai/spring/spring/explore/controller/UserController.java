@@ -1,5 +1,6 @@
 package org.spring.ai.spring.spring.explore.controller;
 
+import org.apache.commons.text.StringEscapeUtils;
 import org.spring.ai.spring.spring.explore.dao.entity.User;
 import org.spring.ai.spring.spring.explore.dao.entity.User2;
 import org.springframework.validation.annotation.Validated;
@@ -19,7 +20,7 @@ import javax.validation.Valid;
 public class UserController {
     @GetMapping("/get")
     public String getUser(@RequestBody @Valid @Validated User user) {
-        return user.getUsername();
+        return StringEscapeUtils.unescapeJava(user.getUsername());
     }
 
     @GetMapping("/get2")
