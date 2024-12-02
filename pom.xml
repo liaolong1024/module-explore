@@ -22,6 +22,7 @@
         <module>spring-explore</module>
         <module>redis-explore</module>
         <module>mysql-explore</module>
+        <module>data-structure-explore</module>
     </modules>
 
     <properties>
