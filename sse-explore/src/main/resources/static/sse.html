@@ -1,0 +1,12 @@
+<html>
+<body>
+<div id="msg_from_server"></div>
+</body>
+<script>
+    const sse = new EventSource("http://localhost:8080/sse/hello");
+    sse.onmessage = function (event) {
+        var eventVal = document.getElementById("msg_from_server");
+        eventVal.innerHTML = event.data;
+    };
+</script>
+</html>
