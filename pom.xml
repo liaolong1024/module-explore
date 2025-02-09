@@ -8,7 +8,7 @@
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>2.7.9</version>
-        <relativePath />
+        <relativePath/>
     </parent>
 
     <groupId>org.self.learn</groupId>
@@ -24,6 +24,7 @@
         <module>mysql-explore</module>
         <module>data-structure-explore</module>
         <module>sse-explore</module>
+        <module>drools</module>
     </modules>
 
     <properties>
@@ -39,10 +40,39 @@
         <guava.version>31.1-jre</guava.version>
         <redission.version>3.18.0</redission.version>
         <mybatis-springboot>2.2.0</mybatis-springboot>
+        <drools.version>7.74.1.Final</drools.version>
     </properties>
 
     <dependencyManagement>
         <dependencies>
+            <!-- 规则引擎 -->
+            <dependency>
+                <!-- https://mvnrepository.com/artifact/org.kie/kie-spring -->
+                <groupId>org.kie</groupId>
+                <artifactId>kie-spring</artifactId>
+                <version>${drools.version}</version>
+
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.springframework</groupId>
+                        <artifactId>spring-tx</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.springframework</groupId>
+                        <artifactId>spring-beans</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.springframework</groupId>
+                        <artifactId>spring-core</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.springframework</groupId>
+                        <artifactId>spring-context</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+
+
             <!--ElasticSearch-->
             <dependency>
                 <groupId>org.elasticsearch</groupId>
