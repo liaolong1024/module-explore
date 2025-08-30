@@ -8,6 +8,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
 // spring xml配置是 <task:annotation-driven />
 @EnableAsync
 public class Application {
+    int a = (int)1e9;
 
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);

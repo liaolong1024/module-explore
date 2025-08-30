@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <!--environments-->
+    <!--<environments default="development">-->
+    <!--    <environment id="development">-->
+    <!--        <transactionManager type="JDBC"/>-->
+    <!--        <dataSource type="POOLED">-->
+    <!--            <property name="driver" value="${driver}"/>-->
+    <!--            <property name="url" value="${url}"/>-->
+    <!--            <property name="username" value="${username}"/>-->
+    <!--            <property name="password" value="${password}"/>-->
+    <!--        </dataSource>-->
+    <!--    </environment>-->
+    <!--</environments>-->
+    <plugins>
+        <!--使用文档: https://pagehelper.github.io/docs/howtouse/-->
+        <plugin interceptor="com.github.pagehelper.PageInterceptor">
+            <!--默认dialect是com.github.pagehelper.PageHelper，
+            需要自定义时，需要定义com.github.pagehelper.Dialect接口实现类，在下方配置dialect属性即可-->
+            <!--<property name="dialect" value="package.custom_dialect"/>-->
+
+            <!--方言默认是根据数据库连接配置自动适应的，可通过helperDialect手动指定，可选值
+            oracle,mysql,mariadb,sqlite,hsqldb,postgresql,db2,sqlserver,informix,h2,sqlserver2012,derby
+            可实现 AbstractHelperDialect，然后配置该属性为实现类的全限定名称即可使用自定义的实现方法
+            -->
+            <property name="helperDialect" value="mysql"/>
+        </plugin>
+    </plugins>
+    
+    <!--Mappers-->
+    <!--<mappers>-->
+    <!--    <mapper resource="org/mybatis/example/BlogMapper.xml"/>-->
+    <!--</mappers>-->
+</configuration>

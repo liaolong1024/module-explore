@@ -1,0 +1,11 @@
+spring:
+  cloud:
+    nacos:
+      server-addr: 127.0.0.1:8848
+      discovery:
+        namespace: 51bd7be0-815d-440a-8de3-ff3042b50d1f
+        cluster-name: bj
+        enabled: true
+      config:
+        file-extension: yaml
+        namespace: ${spring.cloud.nacos.discovery.namespace}

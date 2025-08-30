@@ -1,0 +1,23 @@
+spring:
+  datasource:
+    url: jdbc:mysql://192.168.131.186:3306/learn_self?useSSL=false&characterEncoding=utf8
+    username: root
+    password: lpycHuEcU3<8
+    driver-class-name: com.mysql.cj.jdbc.Driver
+mybatis:
+  mapper-locations: classpath:org/self/learn/dao/mapper/*.xml
+  config-location: classpath:mybatis/mybatis-config.xml
+  check-config-location:	# 指定是否对 MyBatis XML 配置文件的存在进行检查。
+  type-aliases-package:	# 搜索类型别名的包名。（包使用的分隔符是 “,; \t\n”）
+  type-aliases-super-type:	# 用于过滤类型别名的父类。如果没有指定，MyBatis会将所有从 type-aliases-package 搜索到的类作为类型别名处理。
+  type-handlers-package: # 搜索类型处理器的包名。（包使用的分隔符是 “,; \t\n”）
+  executor-type:	# SQL 执行器类型： SIMPLE, REUSE, BATCH
+  default-scripting-language-driver:	# 默认的脚本语言驱动（模板引擎），此功能需要与 mybatis-spring 2.0.2 以上版本一起使用。
+  configuration-properties:	# 可在外部配置的 MyBatis 配置项。指定的配置项可以被用作 MyBatis 配置文件和 Mapper 文件的占位符。更多细节 见 MyBatis 参考页面。
+  lazy-initialization:	# 是否启用 mapper bean 的延迟初始化。设置 true 以启用延迟初始化。此功能需要与 mybatis-spring 2.0.2 以上版本一起使用。
+  mapper-default-scope:	# 通过自动配置扫描的 mapper 组件的默认作用域。该功能需要与 mybatis-spring 2.0.6 以上版本一起使用。
+  inject-sql-session-on-mapper-scan:	# 设置是否注入 SqlSessionTemplate 或  SqlSessionFactory 组件 （如果你想回到 2.2.1 或之前的行为，请指定 false ）。如果你和 spring-native 一起使用，应该设置为 true （默认）。
+#  configuration.*:	# MyBatis Core 提供的Configuration 组件的配置项。有关可用的内部配置项，请参阅MyBatis 参考页面。注：此属性不能与 config-location 同时使用。
+#  scripting-language-driver.thymeleaf.*:	# MyBatis ThymeleafLanguageDriverConfig 组件的 properties keys。有关可用的内部配置项，请参阅 MyBatis Thymeleaf 参考页面。
+#  scripting-language-driver.freemarker.*:	# MyBatis FreemarkerLanguageDriverConfig 组件的 properties keys。有关可用的内部配置项，请参阅 MyBatis FreeMarker 参考页面。这个特性需要与 mybatis-freemarker 1.2.0 以上版本一起使用。
+#  scripting-language-driver.velocity.*:	# MyBatis VelocityLanguageDriverConfig 组件的  properties keys。有关可用的内部属性，请参阅 MyBatis Velocity 参考页面。这个特性需要与 mybatis-velocity 2.1.0 以上版本一起使用。

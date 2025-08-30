@@ -7,7 +7,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.7.9</version>
+        <version>2.2.5.RELEASE</version>
         <relativePath/>
     </parent>
 
@@ -25,6 +25,8 @@
         <module>data-structure-explore</module>
         <module>sse-explore</module>
         <module>drools</module>
+        <module>elasticjob-explore</module>
+        <module>tomcat-plugin-explore</module>
     </modules>
 
     <properties>
@@ -39,12 +41,21 @@
         <commons.io.version>1.3.2</commons.io.version>
         <guava.version>31.1-jre</guava.version>
         <redission.version>3.18.0</redission.version>
-        <mybatis-springboot>2.2.0</mybatis-springboot>
+        <mybatis-springboot.version>2.2.2</mybatis-springboot.version>
         <drools.version>7.74.1.Final</drools.version>
+        <elasticjob.version>3.0.1</elasticjob.version>
+        <pagehelper.version>5.3.1</pagehelper.version>
     </properties>
 
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>com.alibaba.cloud</groupId>
+                <artifactId>spring-cloud-alibaba-dependencies</artifactId>
+                <version>2.2.5.RELEASE</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
             <!-- 规则引擎 -->
             <dependency>
                 <!-- https://mvnrepository.com/artifact/org.kie/kie-spring -->
@@ -102,8 +113,14 @@
             <dependency>
                 <groupId>org.mybatis.spring.boot</groupId>
                 <artifactId>mybatis-spring-boot-starter</artifactId>
-                <version>${mybatis-springboot}</version>
+                <version>${mybatis-springboot.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.github.pagehelper</groupId>
+                <artifactId>pagehelper</artifactId>
+                <version>${pagehelper.version}</version>
+            </dependency>
+
             <!-- MySQL 驱动 -->
             <dependency>
                 <groupId>mysql</groupId>
@@ -159,6 +176,29 @@
             </dependency>
 
             <dependency>
+                <groupId>org.apache.shardingsphere.elasticjob</groupId>
+                <artifactId>elasticjob-lite-spring-boot-starter</artifactId>
+                <version>${elasticjob.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.shardingsphere.elasticjob</groupId>
+                <artifactId>elasticjob-error-handler-dingtalk</artifactId>
+                <version>${elasticjob.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.shardingsphere.elasticjob</groupId>
+                <artifactId>elasticjob-error-handler-email</artifactId>
+                <version>${elasticjob.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.shardingsphere.elasticjob</groupId>
+                <artifactId>elasticjob-error-handler-wechat</artifactId>
+                <version>${elasticjob.version}</version>
+            </dependency>
+
+
+
+            <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-api</artifactId>
                 <version>${slfj.version}</version>
@@ -175,4 +215,22 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.3</version>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>
